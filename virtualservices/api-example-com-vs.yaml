@@ -1,0 +1,19 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: api-example-com
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+    - 'api.example.com:81'
+    routes:
+    - matchers:
+      - prefix: /echoapp/
+      options:
+        prefixRewrite: /
+      routeAction:
+        single:
+          upstream:
+            name: my-ec2-upstream
+            namespace: gloo-system

@@ -1,0 +1,43 @@
+gloo:
+  kubeGateway:
+    # Enable K8s Gateway integration
+    enabled: true
+  settings:
+    disableKubernetesDestinations: true
+  gloo:
+    logLevel: warn
+  discovery:
+    enabled: true
+  gateway:
+    # ddoyle: enabled for debugging purposes to be able to see the Proxy CR. Has performance impact, so don't enable in production environments.
+    # persistProxySpec: true
+    persistProxySpec: false
+    validation:
+      # Strict validation enabled.
+      allowWarnings: false
+      alwaysAcceptResources: false
+      disableTransformationValidation: false
+      warnRouteShortCircuiting: true
+  gatewayProxies:      
+    gatewayProxy:
+      disabled: false
+      readConfig: true
+      readConfigMulticluster: true
+      envoyLogLevel: warn
+      gatewaySettings:
+        enabled: true
+        disableGeneratedGateways: false
+        accessLoggingService:
+          accessLog:
+          - fileSink:
+              path: /dev/stdout
+              stringFormat: ""
+      kind:
+        deployment:
+          replicas: 1
+      service:
+        # Set this to different ports, so we can use port 80 on our K8S Gateway API proxy ....
+        httpPort: 81
+        httpsFirst: true
+        httpsPort: 444
+        type: LoadBalancer
